@@ -1,21 +1,22 @@
 ---
-slug: plan-rheos-provider-boundary-review
-id: "7648b7b5-116a-42e8-9cad-52f9f32e3ba6"
-uuid: "7648b7b5-116a-42e8-9cad-52f9f32e3ba6"
-title: "PLAN-RHEOS-001: Ground and review the prepared provider-boundary proposal"
-kind: story
-type: planning-record
-category: chores
-status: incoming
-priority: P1
-phase: 1
-points: 3
-owner: codex
-labels: "rheos, design, research, review, planning, provenance"
 description: "Prospective local intake for grounding and independently reviewing the already prepared provider-boundary draft; no implementation or prior acceptance is claimed."
+category: "chores"
+labels: "rheos, design, research, review, planning, provenance"
+slug: "plan-rheos-provider-boundary-review"
+license: "GPL-3.0-or-later"
+phase: "1"
+type: "planning-record"
 created: "2026-10-03"
-design: docs/designs/rheos-content-provider-boundary.md
-license: GPL-3.0-or-later
+write-id: "1791013104828-0.zjtmulsjsut9wrtnaf"
+points: "3"
+title: "PLAN-RHEOS-001: Ground and review the prepared provider-boundary proposal"
+priority: "P1"
+status: "ready"
+id: "7648b7b5-116a-42e8-9cad-52f9f32e3ba6"
+kind: "story"
+design: "docs/designs/rheos-content-provider-boundary.md"
+uuid: "7648b7b5-116a-42e8-9cad-52f9f32e3ba6"
+owner: "codex"
 ---
 
 # Ground and review the prepared provider-boundary proposal
@@ -126,3 +127,7 @@ review; return to planning and split the work if the broader provider/retention
 research becomes necessary to its outcome. The next responsible step is local
 triage by the qualified project reviewer through the active `eta-mu kanban`
 process.
+
+---
+PLAN REVIEW: prospective grounding/design-review scope qualified at 70dda2c79f86a1c61ea764bfce7c5646e3925d59 by independent planning; CodeRabbit full review covered the local card and its minor command-surface finding is fixed in f3ac95d20283156cebf70af8cd9345b1a15308f5. Three points, no implementation dependency, bounded criteria and stop conditions. Actual installed eta-mu kanban transitions incoming→accepted→breakdown→ready succeeded now. This supersedes the initial incoming handoff text prospectively; it does not establish prior readiness, completed review, accepted architecture or a waiver. Original draft chronology remains recorded.
+---

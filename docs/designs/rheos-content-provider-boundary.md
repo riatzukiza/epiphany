@@ -36,9 +36,16 @@ silently substituted for the other.
 
 The draft and its first review fixes preceded local board intake. The fresh
 [planning/review card](../kanban/chores/plan-rheos-provider-boundary-review-7648b7b5.md)
-is `incoming`; it records prospective grounding and review, not retroactive
-readiness, completion or acceptance of the prepared draft. Review and readiness
-remain outstanding under the existing Epiphany process.
+was initially captured as `incoming`. On October 3, 2026, after prospective
+planning at `70dda2c79f86a1c61ea764bfce7c5646e3925d59` and the command-surface
+clarification in `f3ac95d20283156cebf70af8cd9345b1a15308f5`, the installed
+`eta-mu kanban` facade recorded `incoming → accepted → breakdown → ready`.
+Its engine-owned `PLAN REVIEW` comment supersedes the initial intake handoff
+prospectively. Current board status remains owned by Rheos and is read through
+that facade; the card and [append-only event history](../kanban/.events/ledger.edn)
+preserve the recorded progression. This qualifies the next grounding/review
+slice, not prior readiness, completed design review or architectural acceptance.
+The design remains `open` and its architectural questions remain unresolved.
 
 ## Scope and non-goals
 

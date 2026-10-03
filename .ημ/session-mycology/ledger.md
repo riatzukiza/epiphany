@@ -35,3 +35,12 @@
   spore: none
   receipt-refs: epiphany-provider-boundary-review; .ημ/receipts.edn
   note: Name the installed eta-mu command facade while preserving Rheos engine authority. Check a kind-specific lifecycle enum before accepting a generic-status lint suggestion, and record unresolved vocabulary reconciliation without changing policy. No spore warranted.
+- ts: 2026-10-03T07:42:14.807513301Z
+  session: /tmp/epiphany-rheos-content-provider-design-20261003
+  task: Epiphany prospective readiness handoff and chronology
+  p-efficiency: 0.95
+  p-friction: 0.15
+  p-skill-candidate: 0.1
+  spore: none
+  receipt-refs: epiphany-provider-boundary-review; .ημ/receipts.edn
+  note: A later lawful ready transition supersedes an initial incoming handoff prospectively. Preserve the earlier wording and engine event chronology, bind checks to actual card/ledger blobs, and distinguish eligibility for review from completed review or architectural acceptance. No spore warranted.
