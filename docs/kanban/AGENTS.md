@@ -9,7 +9,8 @@ docs/kanban/
   stories/          implementable work (US-* product stories, ENG-* engineering slices)
   epics/            phase-level outcome cards (not directly implementable)
   chores/           maintenance work
-  board.json        GENERATED snapshot — never edit by hand
+  .events/ledger.edn TRACKED append-only Rheos event history
+  board.json        GENERATED local snapshot — ignored by Git; never edit by hand
   BOARD-BREAKDOWN.md  delivery map (phases, gates, critical path)
   AGENTS.md         this contract
 ```
@@ -67,7 +68,7 @@ dependency: ["<card id>", ...]    # ids of cards that must be done first
 3. **Estimate the card, not the ceremony.** Don't double-count work owned by another card (schemas, ports, scaffolding); reference the owning card in `dependency` instead.
 4. **Schemas/contracts precede adapters.** Contract cards depend only on scaffolding; adapter cards depend on contract cards.
 5. **Append, don't rewrite.** Record triage/progress/decisions as card comments (`eta-mu kanban comment`) or "revised" sections; never silently rewrite history. Same rule the product itself follows.
-6. **`board.json` is generated.** After editing cards, regenerate the snapshot; never hand-edit it.
+6. **`board.json` is a disposable, lossy local projection, ignored by Git.** Read current board state through Rheos; regenerate the snapshot through the CLI before using it as a diagnostic view. Never hand-edit or commit it. Preserve durable board history in the tracked append-only `docs/kanban/.events/ledger.edn`; never rewrite or reorder that history.
 7. **`review → done` requires `bin/kanban-done-gate <slug>` to exit 0 first.** A 2026-07-12/13 audit found six cards (ENG-004A/B/D, ENG-005A/B/F) promoted to `done` on the implementer's own completion comment alone — several honestly disclosing the gap ("no CLI command yet — needs ports wiring") in the very same comment that got promoted anyway. The gate is a mechanical floor, not a substitute for `docs/process/review-and-acceptance.md`'s reviewer/authority/disposition record: it checks that any CLI command the story names actually exists in `main.clj`'s dispatch table, that a real `N tests, N assertions, 0 failures` line is present (not prose asserting tests pass), and that some comment records an explicit `REVIEW`/`AUDIT` disposition distinct from the implementation comment. Passing the gate does not certify the reviewer was independent or authorized — that part is still on you. A failing gate blocks the transition; do not hand-edit `status: done` around it.
 
 ## How an agent picks work
