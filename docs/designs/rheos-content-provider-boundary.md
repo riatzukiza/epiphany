@@ -26,6 +26,14 @@ claim that these providers exist. It connects Epiphany's document/evidence
 distinctions to the wider Rheos direction without changing Phase 1 ingestion,
 existing process-policy status, board behavior, or production code.
 
+The `open` frontmatter value follows the current
+[design-specific status contract](AGENTS.md#frontmatter-shape). For this
+proposal it means awaiting review with unresolved decisions; it does not claim
+approval, implementation or acceptance. The generic lifecycle vocabulary in
+[draft document governance](../process/document-governance.md#lifecycle-status)
+and the design-specific enum need explicit reconciliation before either is
+silently substituted for the other.
+
 The draft and its first review fixes preceded local board intake. The fresh
 [planning/review card](../kanban/chores/plan-rheos-provider-boundary-review-7648b7b5.md)
 is `incoming`; it records prospective grounding and review, not retroactive

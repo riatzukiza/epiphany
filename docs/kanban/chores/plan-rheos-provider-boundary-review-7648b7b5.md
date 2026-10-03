@@ -72,14 +72,27 @@ architecture or a delivered provider runtime.
 No local execution dependency is asserted for initial triage. The design and
 finding are draft inputs to review, not completed prerequisites. A qualified
 actor must confirm scope, estimate, applicable authority, verification and
-delivery order through Rheos before this card may become `ready`. Subsequent
+delivery order through the active `eta-mu kanban` process before this card may
+become `ready`. Use the installed CLI facade documented in the
+[operational guide](../AGENTS.md), for example this read-only inspection:
+
+```bash
+eta-mu kanban list --tasks-dir docs/kanban
+```
+
+Identify this card by UUID `7648b7b5-116a-42e8-9cad-52f9f32e3ba6` in the output.
+Rheos remains the sole implementation authority for board semantics; the
+active CLI facade is the command surface for those operations. This does not
+restore the older workflow replaced by [current policy](../../process/kanban.md#transition-note)
+or authorize another board implementation or hand-edited status transition.
+Subsequent
 architectural or implementation work needs its own bounded, qualified work item
 and the appropriate research/decision inputs. Initial intake is not that grant.
 
 ## Acceptance criteria
 
-- Prospective readiness and review are recorded through the existing Rheos
-  workflow, without implying they predated the prepared draft.
+- Prospective readiness and board review are recorded through the active
+  `eta-mu kanban` process, without implying they predated the prepared draft.
 - Review names the exact design/finding versions, criteria, inspected source
   basis, reviewer/authority, disposition and remaining limits.
 - The finding traces source preservation and separate qualification of
@@ -111,4 +124,5 @@ or implementation claim if a required decision, source, authority or qualified
 scope is missing. This card's 3-point estimate covers bounded grounding and
 review; return to planning and split the work if the broader provider/retention
 research becomes necessary to its outcome. The next responsible step is local
-triage by the qualified project reviewer through Rheos.
+triage by the qualified project reviewer through the active `eta-mu kanban`
+process.

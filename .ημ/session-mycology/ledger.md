@@ -26,3 +26,12 @@
   spore: none
   receipt-refs: epiphany-provider-boundary-review; .ημ/receipts.edn
   note: Bind verification to tested Git blobs instead of a pre-edit HEAD. Recover missing intake prospectively without invented ready-state history; keep narrow reproduction evidence separate from ungrounded architecture. No spore warranted for this bounded batch.
+- ts: 2026-10-03T07:35:21.605509258Z
+  session: /tmp/epiphany-rheos-content-provider-design-20261003
+  task: Epiphany active CLI wording and status authority review
+  p-efficiency: 0.9
+  p-friction: 0.25
+  p-skill-candidate: 0.15
+  spore: none
+  receipt-refs: epiphany-provider-boundary-review; .ημ/receipts.edn
+  note: Name the installed eta-mu command facade while preserving Rheos engine authority. Check a kind-specific lifecycle enum before accepting a generic-status lint suggestion, and record unresolved vocabulary reconciliation without changing policy. No spore warranted.
