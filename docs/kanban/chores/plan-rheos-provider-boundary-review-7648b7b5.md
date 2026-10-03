@@ -119,8 +119,10 @@ No provider runtime suite or board validation is claimed by this intake.
 
 ## Risks, stop conditions and handoff
 
-The prepared draft predates local intake, and no eligible ready card has yet
-qualified its review. That process finding remains open. Stop any architectural
+The prepared draft predates local intake. At the initial handoff, no eligible
+ready card had qualified the review scope. A later prospective qualification
+and transition to `ready` supersede that handoff finding; the review itself
+remains open. Stop any architectural
 or implementation claim if a required decision, source, authority or qualified
 scope is missing. This card's 3-point estimate covers bounded grounding and
 review; return to planning and split the work if the broader provider/retention
