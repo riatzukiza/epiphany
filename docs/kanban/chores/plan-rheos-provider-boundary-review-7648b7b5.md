@@ -26,10 +26,12 @@ owner: "codex"
 The [open design](../../designs/rheos-content-provider-boundary.md) and its first
 review corrections were prepared before this local card existed. The published
 [draft review](https://github.com/riatzukiza/epiphany/pull/1) exposed that missing
-intake. This fresh local identity records prospective grounding and review;
-`incoming` does not assert an eligible ready card, prior execution authorization,
-completed work, architectural acceptance or a process exception. No historical
-transition is reconstructed.
+intake. This fresh local identity records prospective grounding and review. Its
+initial `incoming` intake did not assert an eligible ready card, prior execution
+authorization, completed work, architectural acceptance or a process exception. No historical
+transition is reconstructed. The recorded PLAN REVIEW comment documents later
+prospective qualification and actual transitions to `ready`; that eligibility
+does not complete the scoped design review, which remains open.
 
 The independent [Foresight coordination story](https://github.com/riatzukiza/foresight/blob/1e0cabfca49788e43bfb4cd93446ad8e8971c457/docs/agile/kanban/design-epiphany-provider-and-review-boundaries-76983190.md)
 at `1e0cabfca49788e43bfb4cd93446ad8e8971c457`, published in
@@ -46,7 +48,8 @@ architecture or a delivered provider runtime.
 
 ## Scope and inputs
 
-- Triage this initial card and qualify the prospective review slice under
+- Use the recorded prospective qualification of this ready card for the scoped
+  independent design review under
   [board policy](../../process/kanban.md) and the [board operational guide](../AGENTS.md).
 - Review the design against [the Process Charter](../../../PROCESS.md),
   [research practice](../../process/research.md),
@@ -58,7 +61,8 @@ architecture or a delivered provider runtime.
 - Identify follow-on research or decisions where the existing evidence is
   insufficient; record owner, question and affected scope before further work.
 - Review and settle findings with immutable artifact/check references, retaining
-  the missing-ready-card finding until prospective qualification is recorded.
+  the missing-ready-card chronology and distinguishing prospective qualification
+  from a completed design review.
 
 ## Non-goals
 
@@ -70,11 +74,13 @@ architecture or a delivered provider runtime.
 
 ## Dependencies and readiness
 
-No local execution dependency is asserted for initial triage. The design and
+At initial intake, no local execution dependency was asserted. The design and
 finding are draft inputs to review, not completed prerequisites. A qualified
-actor must confirm scope, estimate, applicable authority, verification and
-delivery order through the active `eta-mu kanban` process before this card may
-become `ready`. Use the installed CLI facade documented in the
+actor subsequently confirmed scope, estimate, applicable authority, verification
+and delivery order through the active `eta-mu kanban` process, with the
+prospective qualification and actual transition to `ready` recorded below.
+The reviewer must use that bounded eligibility without treating the open design
+decisions as resolved. Use the installed CLI facade documented in the
 [operational guide](../AGENTS.md), for example this read-only inspection:
 
 ```bash
@@ -126,9 +132,10 @@ remains open. Stop any architectural
 or implementation claim if a required decision, source, authority or qualified
 scope is missing. This card's 3-point estimate covers bounded grounding and
 review; return to planning and split the work if the broader provider/retention
-research becomes necessary to its outcome. The next responsible step is local
-triage by the qualified project reviewer through the active `eta-mu kanban`
-process.
+research becomes necessary to its outcome. The next responsible step is the
+pending scoped independent design review against the applicable process, ADRs
+and open design decisions, using this already prospectively qualified ready card
+through the active `eta-mu kanban` process.
 
 ---
 PLAN REVIEW: prospective grounding/design-review scope qualified at 70dda2c79f86a1c61ea764bfce7c5646e3925d59 by independent planning; CodeRabbit full review covered the local card and its minor command-surface finding is fixed in f3ac95d20283156cebf70af8cd9345b1a15308f5. Three points, no implementation dependency, bounded criteria and stop conditions. Actual installed eta-mu kanban transitions incoming→accepted→breakdown→ready succeeded now. This supersedes the initial incoming handoff text prospectively; it does not establish prior readiness, completed review, accepted architecture or a waiver. Original draft chronology remains recorded.
