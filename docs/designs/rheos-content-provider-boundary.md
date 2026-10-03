@@ -5,7 +5,7 @@ title: "Rheos content and review across document providers"
 kind: design
 status: open
 description: "Proposes an Epiphany evidence boundary for a Rheos content/review workspace over compatible document maps, with Markdown first and provider-specific retention and writes."
-labels: rheos, documents, review, providers, provenance
+labels: [rheos, documents, review, providers, provenance]
 created: "2026-10-03"
 requires-decisions: ["ADR-000"]
 source-revision: "643be698ea0d841dd19385506b272872306e456e"
@@ -54,14 +54,6 @@ uses Epiphany's governance as design evidence for Artifact → Event → Reactio
 with boards as a projection. It is a draft integration proposal, not an
 implemented general content engine or accepted common law.
 
-Concurrent candidates outside this repository prepare narrower seams: Foresight
-Alpha's `alpha/src/alpha/law/document.cljc` proposes pure document-observation
-and admission contracts, while a Rheos candidate repairs targeted Markdown
-frontmatter write preservation. Neither candidate supplies a content provider
-runtime or a general CMS reader. Document reading, discussion and reviewed-edit
-integration remain follow-on work. Their eventual review records must identify
-the qualified revisions rather than treating this design as merge evidence.
-
 # Proposed shape and responsibilities
 
 ```text
@@ -87,6 +79,18 @@ representation; it does not establish truth, acceptance or write authority.
 | Shared contracts | Reuse Alpha/Katamorph and existing Epiphany shapes where compatible. Promote genuinely shared pure laws through explicit ownership/acceptance, rather than duplicating their implementation here. |
 | Other adapters | Chat UI can supply conversation primitives, Osmos acquisition/jobs and Clio admitted event semantics. These are proposed integrations, not mandatory new runtime dependencies for every read. |
 
+## Proposed preparatory streams
+
+Outside this repository, this design proposes narrower preparatory streams:
+common pure document-observation/admission contracts in Foresight Alpha, and
+targeted Markdown frontmatter write preservation in Rheos. These are proposed
+coordination context, not existing evidence of a qualified implementation or
+merge. This proposal neither depends on an unqualified external candidate nor
+claims that either stream supplies a provider runtime or general CMS reader.
+Before consuming external work, its source record must pin an immutable
+revision and the checks/review that qualify it. Document reading, discussion and
+reviewed-edit integration remain follow-on work.
+
 An API query and each returned entity have different identities. Content digest,
 observation time, source version and semantic identity also differ. A provider
 without reproducible versions exposes that limitation; it never invents a Git
@@ -100,13 +104,22 @@ context it actually used. Refreshing live content creates another observation;
 it cannot silently rebind old messages or proposals. A review names its target,
 criteria, available basis, disposition, actor/authority and limitations.
 
-Payload retention is separate from review-record retention. A volatile payload
-may expire or remain ephemeral. A retained decision preserves its available
-source locator, observation/query context, digest, transformation version and
-relevant evidence references under an explicit policy. Optional bounded evidence
-capture is a separate retention choice. Credentials are excluded. A digest alone
-cannot reconstruct content; exact replay is reported unavailable when its basis
-was not retained or the source cannot reproduce it.
+Payload retention is separate from review-record retention. Reading, discussion
+and provisional review may use an ephemeral payload; bounded capture remains
+optional for those activities. A retained review record preserves its available
+source locator, observation/query context, digest, transformation version,
+disposition and relevant evidence references under an explicit policy.
+
+Acceptance or promotion of a claim that depends on volatile evidence requires
+sufficient bounded retained evidence, or a pinned source capable of reproducing
+the relevant observation. The durable acceptance event must reference that basis
+and state its limits. A locator, query description or digest alone is insufficient
+when it cannot recover the evidence supporting the claim. Without that basis,
+the claim remains provisional or needs investigation; it cannot be accepted or
+promoted. This gate preserves the evidence needed for the claim, not every live
+payload. Credentials are excluded. Exact replay of a full payload is reported
+unavailable when it was not retained and the source cannot reproduce it, even
+when bounded evidence is sufficient for a narrower accepted claim.
 
 A read-only provider permits discussion and judgment without an implied write
 protocol. Publishing a report derived from its data creates a separate target.
@@ -122,19 +135,32 @@ outcomes when the write succeeds but durable review/event recording fails.
 
 # Follow-on plan and evidence
 
-1. **Common read boundary.** Map one Markdown observation and one read-only
+1. **Common read boundary — unblocked preparation.** Map one Markdown observation and one read-only
    API-shaped fixture into compatible reviewable inputs. Reject malformed
    assembly output. The fixture has no path, Git revision or frontmatter and
-   performs no network operation.
-2. **Markdown discussion and reviewed edit.** Bind discussion and a diff to the
+   performs no network operation. Prototype contracts do not settle shared
+   ownership or admit a production source.
+2. **Markdown preservation — unblocked preparation.** Qualify preservation of
+   untouched source text and arbitrary metadata within the existing Markdown
+   boundary. This does not add conversation persistence, review authority or a
+   new write protocol.
+3. **Markdown discussion and reviewed edit — blocked.** Resolve `DISCUSSION-EVIDENCE-BINDING`
+   and `WRITE-AUTHORITY-GUARDS` before implementing this integration; resolve
+   `DOCUMENT-CONTRACT-OWNERSHIP` before consuming a shared cross-repository law.
+   Bind discussion and a diff to the
    observation. Demonstrate rejection with unchanged bytes, source-change
    conflict, targeted source preservation, idempotent acceptance, and recovery
    of discussion/decision context after restart.
-3. **Epiphany evidence seam.** Supply one exact revision/span evidence packet
+4. **Epiphany evidence seam — runtime integration blocked.** Resolve
+   `DOCUMENT-CONTRACT-OWNERSHIP` and `DISCUSSION-EVIDENCE-BINDING` before integration.
+   Supply one exact revision/span evidence packet
    from the existing Git corpus. Show observed evidence and provisional
    interpretation separately, including unavailable evidence. This is the first
    integration candidate, not a replacement ingestion engine.
-4. **Additional providers after scoped decisions.** Qualify live refresh,
+5. **Additional production providers — blocked.** Resolve `DOCUMENT-CONTRACT-OWNERSHIP`
+   and `NON-GIT-AUTHORITY-RETENTION` before admitting API, live or raw-input
+   providers. Discussion and writes additionally depend on their corresponding
+   decisions below. Qualify live refresh,
    production raw-input formatting, optional capture and external writes only
    when their adapters are implemented. Each identifies its retention and
    authority decisions and demonstrates its real provider boundary.
@@ -154,11 +180,25 @@ with unrelated review flows would preserve origin but duplicate review
 semantics. Compatible maps with explicit capabilities offer a common review
 boundary while leaving those source differences visible.
 
-Before implementation expands beyond existing Markdown/Git capabilities,
-resolve precise shared contract ownership, source/query observation identity,
-non-Git authority and retention under an ADR-000 follow-on, conversation/evidence
-binding, and each write adapter's authorization/version guard. Reading a fixture
-does not decide these architectural questions or admit a production source.
+## Decision candidates and implementation blockers
+
+The following names identify open decision candidates in this proposal, not
+issued or accepted ADRs. The `requires-decisions` reference to ADR-000 preserves
+the existing authority boundary; clearing it does not resolve these candidates.
+The affected integration slices above remain blocked until the named resolution
+artifacts exist and are accepted through the repository's decision process.
+
+| Open decision candidate | Blocked scope | Required resolution artifact |
+| --- | --- | --- |
+| `DOCUMENT-CONTRACT-OWNERSHIP` | Production use of a shared cross-repository document boundary and the Epiphany/Rheos evidence integration. | Accepted architectural decision naming contract ownership, source/query/entity identity, assembly/schema versioning, and qualified immutable source revisions before consumption. |
+| `NON-GIT-AUTHORITY-RETENTION` | Production API/live/raw-input providers and non-Git evidence retention or promotion. | Accepted ADR-000 follow-on naming canonical source authority, observation coverage/freshness, retention choices, sufficient preserved evidence for promotion, and unavailable/reproducibility behavior. |
+| `DISCUSSION-EVIDENCE-BINDING` | Persisted discussion/review integration, including the Markdown loop and Epiphany evidence seam. | Accepted architectural decision defining observation/assembly/target binding, refresh and conflict behavior, durable review records, and restart/recovery contracts. |
+| `WRITE-AUTHORITY-GUARDS` | Applying reviewed Markdown edits and every external source write. | Accepted provider-specific architectural decision naming authorization, reviewed-version guards, race handling, idempotency, and recovery when writes and review-record persistence diverge. |
+
+Pure fixture work, inspection of existing Git evidence, and targeted preservation
+work within existing Markdown contracts remain unblocked preparation. They do
+not authorize the blocked integration stories, decide these architectural
+questions, or admit a production non-Git source.
 
 The next bounded step is review of the common read contract and its two fixture
 representations. This proposal does not mark that step accepted or implemented.
