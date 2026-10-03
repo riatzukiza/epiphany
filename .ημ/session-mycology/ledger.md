@@ -17,3 +17,12 @@
   spore: none
   receipt-refs: .ημ/receipts.edn
   note: Keep design labels in their documented sequence form; separate optional payload retention from evidence required for promotion, and expose unresolved implementation decisions by affected slice. No spore warranted from this single review batch.
+- ts: 2026-10-03T07:14:30.572597345Z
+  session: /tmp/epiphany-rheos-content-provider-design-20261003
+  task: Epiphany design grounding and provenance correction
+  p-efficiency: 0.85
+  p-friction: 0.32
+  p-skill-candidate: 0.15
+  spore: none
+  receipt-refs: epiphany-provider-boundary-review; .ημ/receipts.edn
+  note: Bind verification to tested Git blobs instead of a pre-edit HEAD. Recover missing intake prospectively without invented ready-state history; keep narrow reproduction evidence separate from ungrounded architecture. No spore warranted for this bounded batch.

@@ -26,6 +26,12 @@ claim that these providers exist. It connects Epiphany's document/evidence
 distinctions to the wider Rheos direction without changing Phase 1 ingestion,
 existing process-policy status, board behavior, or production code.
 
+The draft and its first review fixes preceded local board intake. The fresh
+[planning/review card](../kanban/chores/plan-rheos-provider-boundary-review-7648b7b5.md)
+is `incoming`; it records prospective grounding and review, not retroactive
+readiness, completion or acceptance of the prepared draft. Review and readiness
+remain outstanding under the existing Epiphany process.
+
 ## Scope and non-goals
 
 The proposed boundary covers source context, assembly into compatible document
@@ -48,6 +54,24 @@ Their design and implementation claims have different scopes:
 | [Storage ports](../../src/epiphany/law/ports.clj), [profile assembly](../../src/epiphany/infra/profile.clj) | Implemented injection of named-function maps and validation around observation adapters. | Storage/application assembly, not a document-provider registry. |
 | [Artifact identity](artifact-identity-model.md), [authority questions](phase-1-decision-status.md) | Phase 1 observes Git repositories; extraction and semantic continuity are distinct from Git facts. | Non-Git authority, including API responses, was deliberately deferred. |
 | [ADR-000](../adrs/adr-000-authoritative-data-boundary.md) | Proposed Git source ownership, operation-specific caches and selective preservation. | Proposed and scoped to Git-backed Phase 1; it does not settle live-source retention. |
+
+## Bounded research grounding and remaining gap
+
+The concrete [source-preservation and qualification finding](../research/rheos-source-preservation-qualification-finding.md#bounded-finding)
+informs the requirements to preserve unrelated Markdown source and separately
+qualify parsing, real writes and durable recording. Its inputs are the pinned
+Rheos baseline and probe, plus historical Promethean testing, blocker and source
+records. A new direct reproduction confirmed the recorded 186-to-145-character
+loss while updating one frontmatter key. The historical source inspection also
+distinguishes mocked read/write control flow from real file persistence.
+
+Those observations support bounded preservation and qualification work. They
+do not establish the proposed generic provider abstraction, contract ownership,
+volatile-source retention policy, discussion binding or write authority. The
+finding records that [architectural evidence gap](../research/rheos-source-preservation-qualification-finding.md#architectural-evidence-gap)
+explicitly. Those parts remain provisional design candidates requiring further
+decision-support research and the resolution artifacts named below; this
+proposal must not be treated as a completed or accepted architecture.
 
 The [August Rheos generalization](https://github.com/open-hax/foresight/blob/b03805b0b87e5c7e9a628b0efa1fab61a066f20a/docs/notes/generalizing-rheos-artifact-event-reaction.md)
 uses Epiphany's governance as design evidence for Artifact → Event → Reaction,
