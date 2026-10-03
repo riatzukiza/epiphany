@@ -44,3 +44,12 @@
   spore: none
   receipt-refs: epiphany-provider-boundary-review; .ημ/receipts.edn
   note: A later lawful ready transition supersedes an initial incoming handoff prospectively. Preserve the earlier wording and engine event chronology, bind checks to actual card/ledger blobs, and distinguish eligibility for review from completed review or architectural acceptance. No spore warranted.
+- ts: 2026-10-03T14:28:27.785073548Z
+  session: /tmp/epiphany-rheos-content-provider-design-20261003
+  task: Align diagnostic projection policy and preserve complete review input
+  p-efficiency: 0.78
+  p-friction: 0.84
+  p-skill-candidate: 0.6
+  spore: none
+  receipt-refs: epiphany-projection-policy-and-complete-review-input
+  note: Explicitly fix tracked projection versus active user instruction without rewriting engine history. Preserve complete raw changed input and bounded primary separately; availability is not full model consumption or indexed publication. Local negative probes verify refusal. Native scope and Codex quota remain open; no spore.
