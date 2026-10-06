@@ -9,7 +9,7 @@ priority: P2
 phase: 1
 points: 2
 labels: candidates, idempotency, parity
-dependency: 3e423919-a420-4195-b808-3ecb931dd16c
+dependency: ["3e423919-a420-4195-b808-3ecb931dd16c"]
 ---
 
 ## Context
