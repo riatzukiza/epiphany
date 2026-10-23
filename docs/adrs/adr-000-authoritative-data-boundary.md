@@ -3,12 +3,27 @@ slug: adr-000-authoritative-data-boundary
 uuid: 01900d7c-7f3a-7e8b-9c4d-000000000100
 title: "ADR 000: Authoritative Data and Rebuildability Boundary"
 kind: decision
-status: proposed
+status: accepted
 description: "Defines Git as canonical source storage for Phase 1, with operation-specific caches and selective archival preservation."
 labels: [adr, architecture, phase-1, git, data-model]
 created: "2026-07-11"
 source: "docs/inbox/2026.07.11.04.55.08.md"
 ---
+
+## Acceptance record
+
+```clojure
+(α "ADR 000: Authoritative Data and Rebuildability Boundary"
+   :criteria  "Phase 1 storage boundary as stated below: Git object database is canonical for Git-backed bytes; platform records metadata and derived projections; blob caches are operation-specific and evictable; archival preservation is selective."
+   :evidence  "This document at the commit that sets status: accepted; contradiction seed-T11 (proposed vs. treated-as-settled) raised in the 2026-10-23 documentation-consistency review."
+   :reviewer  "Err (riatzukiza), repository owner"
+   :authority "Repository owner decision on architecture records"
+   -> :accepted)
+```
+
+- Date: 2026-10-23.
+- Scope: Phase 1 only. The open cache-tier question at the end of this record stays open and is not decided by this acceptance.
+- Not covered: `docs/notes/decision/multi-agent-governance.md` remains `proposed`. Its "Relationship to ADR-000" section refers to a different record, [ADR 000: Foundational Technology Stack](../research/knowledge-platform-architecture-survey.md#adr-000-foundational-technology-stack) (its link target `docs/adrs/ADR-000.md` does not exist), so its pending reconciliation does not gate this storage-boundary ADR.
 
 Yes—that is a sound Phase 1 position: **Git is canonical during indexing; the platform stores metadata and derived projections, while blob bytes are cached according to the operation rather than permanently duplicated by default.**
 
