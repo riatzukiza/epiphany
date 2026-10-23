@@ -3,7 +3,7 @@ slug: adr-000-authoritative-data-boundary
 uuid: 01900d7c-7f3a-7e8b-9c4d-000000000100
 title: "ADR 000: Authoritative Data and Rebuildability Boundary"
 kind: decision
-status: proposed
+status: accepted
 description: "Defines Git as canonical source storage for Phase 1, with operation-specific caches and selective archival preservation."
 labels: [adr, architecture, phase-1, git, data-model]
 created: "2026-07-11"
