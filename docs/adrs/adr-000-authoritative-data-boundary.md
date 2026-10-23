@@ -23,7 +23,7 @@ source: "docs/inbox/2026.07.11.04.55.08.md"
 
 - Date: 2026-10-23.
 - Scope: Phase 1 only. The open cache-tier question at the end of this record stays open and is not decided by this acceptance.
-- Not covered: `docs/notes/decision/multi-agent-governance.md` remains `proposed`. Its "Relationship to ADR-000" section refers to a different record ("ADR-000: Foundational Technology Stack", `docs/adrs/ADR-000.md`), so its pending reconciliation does not gate this storage-boundary ADR.
+- Not covered: `docs/notes/decision/multi-agent-governance.md` remains `proposed`. Its "Relationship to ADR-000" section refers to a different record, [ADR 000: Foundational Technology Stack](../research/knowledge-platform-architecture-survey.md#adr-000-foundational-technology-stack) (its link target `docs/adrs/ADR-000.md` does not exist), so its pending reconciliation does not gate this storage-boundary ADR.
 
 Yes—that is a sound Phase 1 position: **Git is canonical during indexing; the platform stores metadata and derived projections, while blob bytes are cached according to the operation rather than permanently duplicated by default.**
 
