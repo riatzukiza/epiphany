@@ -236,7 +236,7 @@
     com.fasterxml.jackson.databind.ObjectMapper},
   :dot-calls 28,
   :static-calls 5,
-  :type-hints 10},
+  :type-hints 9},
  epiphany.extern.resource-selection
  {:quadrant nil,
   :imports #{},

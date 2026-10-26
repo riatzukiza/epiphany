@@ -1,5 +1,6 @@
 (ns epiphany.extern.resource-test
   (:require [clojure.test :refer [deftest is testing]]
+            [clojure.string :as str]
             [epiphany.extern.resource :as resource]
             [epiphany.law.resource :as law]
             [malli.core :as m])
@@ -9,6 +10,47 @@
 
 (defn- types [value]
   (into #{} (keep #(when (map? %) (:value/type %))) (tree-seq coll? seq value)))
+
+(defn- map-values [node]
+  (into {} (map (fn [entry] [(get-in entry [:entry/key :value/data]) (:entry/value entry)]))
+        (:value/entries node)))
+
+(deftest toml-quoted-keys-are-literal-immediate-components
+  (doseq [text ["\"a.b\" = 1\n" "\"a b\" = 3\n"
+                "\"a.b\" = 1\n\"a b\" = 3\n[a]\nb = 2\n"]]
+    (let [result (parse "literal.toml" text) values (map-values (:resource/value result))]
+      (is (= :parsed (:resource/status result)) (pr-str result))
+      (when (str/includes? text "\"a.b\"")
+        (is (= :integer (get-in values ["a.b" :value/type])))
+        (is (= "1" (get-in values ["a.b" :value/data]))))
+      (when (str/includes? text "\"a b\"")
+        (is (= "3" (get-in values ["a b" :value/data]))))
+      (when (str/includes? text "[a]")
+        (is (= "2" (get-in (map-values (get values "a")) ["b" :value/data])))))))
+
+(deftest malformed-chat-node-retains-parsed-resource-and-error-provenance
+  (doseq [[message path] [["42" ["mapping" "n" "message"]]
+                          ["{\"author\":42}" ["mapping" "n" "message" "author"]]]]
+    (let [result (parse "chat.json" (str "{\"current_node\":\"n\",\"mapping\":{\"n\":{\"parent\":null,\"message\":" message "}}}"))]
+      (is (= :parsed (:resource/status result)))
+      (is (= :map (get-in result [:resource/value :value/type])))
+      (is (some #(and (= :malformed-conversation (:diagnostic/code %))
+                      (= path (:diagnostic/source-path %))
+                      (= :document (get-in % [:diagnostic/source-span :span/granularity])))
+                (:resource/diagnostics result))))))
+
+(deftest every-malformed-conversation-claim-is-diagnosed
+  (let [result (parse "array.json" "[{\"schema\":\"epiphany.conversation.v1\",\"messages\":[]},{\"schema\":\"epiphany.conversation.v1\",\"messages\":false}]")]
+    (is (= :parsed (:resource/status result)))
+    (is (= 1 (count (:resource/conversations result))))
+    (is (some #(= [1] (:diagnostic/source-path %)) (:resource/diagnostics result))))
+  (let [result (parse "session.jsonl" "{\"type\":\"session\",\"id\":\"s\"}\n{\"type\":\"message\",\"message\":{\"role\":\"user\",\"content\":\"known\"}}\n{\"type\":\"message\",\"message\":false}\n")]
+    (is (= :parsed (:resource/status result)))
+    (is (= 3 (count (:resource/records result))))
+    (is (= 1 (count (get-in result [:resource/conversations 0 :conversation/messages]))))
+    (is (some #(and (= [3 "message"] (:diagnostic/source-path %))
+                    (= 3 (get-in % [:diagnostic/source-span :span/start-line])))
+              (:resource/diagnostics result)))))
 
 (deftest formats-retain-lossless-source-and-typed-values
   (doseq [[path text expected]

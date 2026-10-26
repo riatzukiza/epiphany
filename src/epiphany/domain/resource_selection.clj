@@ -1,10 +1,13 @@
 (ns epiphany.domain.resource-selection
-  "Pure scope decisions shared by revision, extraction and embedding stages.")
+  "Pure scope decisions shared by revision, extraction and embedding stages."
+  (:require [epiphany.domain.markdown-selection :as markdown]))
 
 (defn includes-path?
   "A missing policy retains legacy Markdown selection; explicit paths are literal."
   [policy path]
-  (or (nil? policy) (contains? (set (:selection/paths policy)) path)))
+  (if policy
+    (contains? (set (:selection/paths policy)) path)
+    (markdown/includes-path? markdown/default-policy path)))
 
 (defn select-entries
   "Select regular Git files only, preserving exact paths, OIDs and file modes."

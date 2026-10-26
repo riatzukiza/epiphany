@@ -64,7 +64,7 @@
   "Decode foreign collection values; retain TOML local date/time types as tagged data."
   [value]
   (cond
-    (instance? TomlTable value) (into {} (map (fn [key] [key (portable (.get ^TomlTable value ^String key))]) (.keySet ^TomlTable value)))
+    (instance? TomlTable value) (into {} (map (fn [key] [key (portable (.get ^TomlTable value ^java.util.List [key]))]) (.keySet ^TomlTable value)))
     (instance? TomlArray value) (mapv #(portable (.get ^TomlArray value (int %))) (range (.size ^TomlArray value)))
     (list? value) (apply list (map portable value))
     (instance? Map value) (into {} (map (fn [[k v]] [(portable k) (portable v)]) value))
@@ -122,14 +122,56 @@
         (recur (next lines) end (inc line) (cond-> records record (conj record))))
       records)))
 
+(defn- chat-diagnostic [path span]
+  {:diagnostic/code :malformed-conversation
+   :diagnostic/source-path path :diagnostic/source-span span})
+
+(defn- project-claim [result value span path]
+  (if-not (conversations/declared-chat? value)
+    result
+    (try
+      (let [errors (conversations/claim-errors value)
+            projected (when (empty? errors) (conversations/project value span))]
+        (if (and (seq projected) (every? #(m/validate law/conversation-schema %) projected))
+          (update result :resource/conversations into
+                  (map #(-> %
+                            (update :conversation/source-path (fn [source] (into path source)))
+                            (update :conversation/messages
+                                    (fn [messages]
+                                      (mapv (fn [message]
+                                              (update message :message/source-path
+                                                      (fn [source] (into path source)))) messages)))) projected))
+          (update result :resource/diagnostics into
+                  (map #(chat-diagnostic (into path %) span) (if (seq errors) errors [[]])))))
+      (catch Exception _
+        (update result :resource/diagnostics conj (chat-diagnostic path span))))))
+
 (defn- with-conversations
-  "Admit only typed recognized conversation projections; retain malformed source as data."
-  [result projected claimed?]
-  (if (and (every? #(m/validate law/conversation-schema %) projected)
-           (or (not claimed?) (seq projected)))
-    (assoc result :resource/conversations projected)
-    (assoc result :resource/conversations []
-           :resource/diagnostics [{:diagnostic/code :malformed-conversation}])))
+  "Admit each claim independently; chat errors never discard successfully parsed data."
+  [result value span]
+  (reduce (fn [current [path claim]] (project-claim current claim span path))
+          result (if (vector? value) (map-indexed (fn [index claim] [[index] claim]) value) [[[] value]])))
+
+(defn- with-session-conversations [result records]
+  (if-not (some #(= "session" (get-in % [:record/decoded "type"])) records)
+    result
+    (let [record-errors
+          (into [] (keep (fn [record]
+                           (let [event (:record/decoded record) line (:record/line record)]
+                             (cond
+                               (and (= "session" (get event "type")) (not (string? (get event "id"))))
+                               (chat-diagnostic [line "id"] (:record/span record))
+                               (and (= "message" (get event "type")) (not (map? (get event "message"))))
+                               (chat-diagnostic [line "message"] (:record/span record)))))) records)
+          projected (conversations/project-session records)
+          message-errors (into [] (comp (mapcat :conversation/messages)
+                                        (remove #(m/validate law/message-schema %))
+                                        (map #(chat-diagnostic (:message/source-path %) (:message/source-span %)))) projected)
+          admitted (mapv #(update % :conversation/messages
+                                  (fn [messages] (filterv (fn [message] (m/validate law/message-schema message)) messages))) projected)]
+      (-> result
+          (assoc :resource/conversations admitted)
+          (update :resource/diagnostics into (concat record-errors message-errors))))))
 
 (defn parse
   "Return lossless bytes and typed source structure, or an explicit diagnostic.
@@ -157,15 +199,14 @@
               base (assoc base :resource/source-span span)]
           (if (= format :jsonl)
             (let [records (parse-lines source)]
-              (with-conversations
+              (with-session-conversations
                 (assoc base :resource/status (if (every? #(= :parsed (:record/status %)) records) :parsed :malformed)
                        :resource/records (mapv #(dissoc % :record/decoded) records))
-                (conversations/project-session records)
-                (boolean (some #(= "session" (get-in % [:record/decoded "type"])) records))))
+                records))
             (let [value (parse-value format source)]
               (with-conversations
                 (assoc base :resource/status :parsed :resource/value (value-tree value span 0))
-                (conversations/project value span) (conversations/declared-chat? value)))))
+                value span))))
         (catch Exception _
           (assoc base :resource/status :malformed
                  :resource/diagnostics [{:diagnostic/code :malformed-resource :diagnostic/format format}]))

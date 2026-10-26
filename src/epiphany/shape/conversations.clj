@@ -18,10 +18,34 @@
                             (get % "text")) content))
     :else nil))
 
+(defn- node-errors [node-id node]
+  (let [path ["mapping" node-id] message (get node "message")]
+    (cond
+      (not (and (map? node) (contains? node "parent"))) [path]
+      (and (some? message) (not (map? message))) [(conj path "message")]
+      (and (map? message) (some? (get message "author")) (not (map? (get message "author"))))
+      [(into path ["message" "author"])]
+      :else [])))
+
+(defn claim-errors
+  "Return source-relative malformed claim locations before projecting foreign shapes."
+  [value]
+  (cond
+    (= "epiphany.conversation.v1" (get value "schema"))
+    (if (vector? (get value "messages"))
+      (into [] (keep (fn [[index message]] (when-not (map? message) ["messages" index])))
+            (map-indexed vector (get value "messages")))
+      [[]])
+    (and (map? value) (contains? value "mapping") (contains? value "current_node"))
+    (if (and (map? (get value "mapping")) (string? (get value "current_node")))
+      (into [] (mapcat (fn [[node-id node]] (node-errors node-id node))) (get value "mapping"))
+      [[]])
+    :else []))
+
 (defn- chatgpt [value span]
   (when (and (map? value) (map? (get value "mapping"))
              (string? (get value "current_node"))
-             (every? #(and (map? %) (contains? % "parent")) (vals (get value "mapping"))))
+             (empty? (claim-errors value)))
     [(supplied
       {:conversation/schema "chatgpt.mapping.v1" :conversation/order :parent-graph
        :conversation/source-span span

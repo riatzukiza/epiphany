@@ -162,3 +162,26 @@ and Lucene vector-module diagnostics. This is separate from functional passes;
 no warning suppression, service operation or PR18 readiness claim is made.
 New implementation code follows the task's GPL-3.0-or-later application contract;
 third-party components retain their own licenses.
+
+## Draft review regression pass
+
+On published draft head `2c6c710aca81ec0f1a8bbc36c352a128a8ace702`,
+four synthetic regressions produced 16 failures / 39 assertions. They reproduced
+legacy no-policy embedding/retry reopening previously selected chat bodies,
+TOML quoted literal keys being read as dotted expressions, and two chat-boundary
+cases losing parsed data or silently dropping a malformed sibling claim.
+
+The repair applies the existing Markdown policy to persisted revisions, with
+missing path metadata refused. TOML retrieves each immediate key as one literal
+path component. Chat projection validates claims independently from structured
+parsing: malformed claims retain the typed source and receive source-path/span
+diagnostics, while valid siblings remain available. JSONL message errors identify
+the original line and field. This does not rewrite existing durable observations
+or automatically re-extract previously stored derived records.
+
+The repaired source passes 831 unit tests / 2721 assertions, zero failures,
+including real JGit/Clio reused-store regressions for both extracted and failed
+chat revisions. Only the embedding provider is substituted; historical body reads
+are audited. Lint has zero errors/warnings; formatting, boundaries, interop ratchet
+and JVM build pass. The prior functional and warning-gate results above retain
+their original scope; no inherited PR18 blocker is claimed resolved.

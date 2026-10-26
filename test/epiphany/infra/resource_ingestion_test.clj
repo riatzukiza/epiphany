@@ -32,7 +32,58 @@
 (defn- policy! [file repo paths]
   (spit file (pr-str {:selection/version 1 :selection/repository repo :selection/paths paths})))
 
+(deftest legacy-default-does-not-retry-or-embed-previously-selected-chat
+  (doseq [failed-chat? [false true]]
+    (with-fixture
+      (fn [directory repo repository]
+        (let [file (str directory "/policy.edn") ledger (str directory "/ledger")
+              index (str directory "/index") original-read git/read-blob
+              reads (atom []) embedded (atom [])]
+          (spit (io/file repo "notes.md") "# Historical memory\n\nA synthetic note.\n")
+          (spit (io/file repo "chat.json") "{\"schema\":\"epiphany.conversation.v1\",\"messages\":[{\"role\":\"user\",\"text\":\"Synthetic selected chat\"}]}")
+          (let [head (commit! repository "Explicit synthetic chat selection")
+                chat-oid (some #(when (= "chat.json" (:git/path %)) (:git/blob-oid %))
+                               (:entries (git/commit-tree-entries repo head)))]
+            (policy! file repo ["notes.md" "chat.json"])
+            (with-redefs [host/configured-directory (constantly ledger)]
+              (with-redefs [git/read-blob (fn read
+                                            ([path oid] (read path oid nil))
+                                            ([path oid limit]
+                                             (if (and failed-chat? (= chat-oid oid))
+                                               {:blob/failure {:failure/reason "synthetic-unavailable"}}
+                                               (original-read path oid limit))))]
+                (let [result (main/run ["ingest" "--profile" "edn" "--selection-policy" file
+                                        "--index-dir" index repo])]
+                  (is (= (if failed-chat? 1 0) (:exit result)) (:out result))))
+              (let [snapshot ((:export-all (clio/make-observations-adapter (clio/open-store ledger))))]
+                (is (= 2 (count (get snapshot "revision-at-path"))))
+                (is (= (if failed-chat? 1 2) (count (get snapshot "section-extraction")))))
+              (with-redefs-fn
+                {#'main/require-ollama! (constantly nil)
+                 #'main/make-edn-adapters
+                 (let [original #'main/make-edn-adapters
+                       make-adapters @original]
+                   (fn [index-dir]
+                     (assoc (make-adapters index-dir) :embeddings
+                            {:embedding-version (constantly 1)
+                             :embed-sections! (fn [records]
+                                                (swap! embedded into (map :extraction/path-raw records)) [])})))
+                 #'git/read-blob (fn read
+                                   ([path oid] (read path oid nil))
+                                   ([path oid limit]
+                                    (swap! reads conj oid)
+                                    (original-read path oid limit)))}
+                (fn []
+                  (let [result (main/run ["ingest" "--profile" "edn" "--embed" "--index-dir" index repo])]
+                    (is (= 0 (:exit result)) (:out result)))))
+              (is (seq @reads) "The default still rehydrates its admitted Markdown")
+              (is (not-any? #{chat-oid} @reads) (str "chat body read after default reuse; failed-chat?=" failed-chat?))
+              (is (= ["notes.md"] @embedded))
+              (let [snapshot ((:export-all (clio/make-observations-adapter (clio/open-store ledger))))]
+                (is (= (if failed-chat? 1 2) (count (get snapshot "section-extraction"))))))))))))
+
 (deftest policy-is-exact-repository-scoped-and-non-evaluating
+  (is (not (selection/includes-path? nil nil)) "Missing persisted path metadata fails closed")
   (with-fixture
     (fn [directory repo _]
       (let [file (str directory "/policy.edn")]
